@@ -18,11 +18,10 @@
 ## 🎨 Demonstração
 
 ### Página de Codificação
-![Codificação](https://prnt.sc/2xmEe5CWw3Dw)
+![Codificação](https://github.com/user-attachments/assets/b4bdcec2-71c6-413e-85b0-947208a1d396)
 
 ### Página de Decodificação
-![Decodificação](https://prnt.sc/57n9siWTbm1y)
-
+![Decodificação](https://private-user-images.githubusercontent.com/48651462/386378852-b6981e68-b8d6-4122-b406-413e04ecc768.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzE2MjExNTEsIm5iZiI6MTczMTYyMDg1MSwicGF0aCI6Ii80ODY1MTQ2Mi8zODYzNzg4NTItYjY5ODFlNjgtYjhkNi00MTIyLWI0MDYtNDEzZTA0ZWNjNzY4LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDExMTQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQxMTE0VDIxNDczMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTk0ZTUwODJmYjE3NDZhNTg5Y2YxZTFmYWRiYTQ4NDdlMDg1ZTk3NDY2MTkxODFiOTgzODhjNTU4NmNjMmRhMTUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.K4n4eK1BA3deR9nPsQBY-37lftKkFIJ9wxm5wtVsx5Q)
 
 ## 🚀 Começando
 
