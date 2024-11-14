@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XOR String Generator - Blue Team Pro</title>
+    <style>
+        /* Reset de estilos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilo do corpo */
+        body {
+            background-color: #1c1f26;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container principal */
+        .main-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #2a2d37;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Título */
+        h1 {
+            font-size: 1.8em;
+            color: #00b4d8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Campos de entrada e saída */
+        .input-field, .output-field {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background-color: #3b3f4a;
+            color: #e0e0e0;
+            border: 1px solid #0077b6;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        /* Botão */
+        .convert-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0077b6;
+            color: #ffffff;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .convert-button:hover {
+            background-color: #005f87;
+        }
+
+        /* Link de navegação */
+        .nav-link {
+            color: #00b4d8;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+
+        /* Mensagem de uso */
+        .usage-message {
+            color: #a0a0b0;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        /* Rodapé */
+        .footer {
+            margin-top: 15px;
+            text-align: center;
+            color: #666;
+            font-size: 0.75em;
+        }
+    </style>
+    <script src="xorgen.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <h1>XOR String Generator - Blue Team Pro</h1>
+        <form name="formx">
+            <input id="inp" class="input-field" name="inp" type="text" placeholder="Digite a string para converter">
+            <button type="button" class="convert-button" onclick="blub(this.form);">Converter para XOR String</button>
+            <textarea id="ans" class="output-field" name="ans" rows="6" readonly placeholder="Resultado aparecerá aqui"></textarea>
+        </form>
+        <a href="decoded.html" class="nav-link">→ Ir para Decodificação</a>
+        <div class="usage-message">
+            Exemplo de uso: XorStr&lt;0xBD,8,0xB4B8AAAF&gt;("&#92;xF1&#92;xBD&#92;xDE&#92;xB6&#92;x8A&#92;xAC&#92;xA4"+0xB4B8AAAF).s
+        </div>
+        <div class="footer">
+            Desenvolvido por Lyon - Adaptações e melhorias © 2024<br>
+            Código original do XorGen.js por D4rC.nEt (http://d4rc.net)
+        </div>       
+    </div>
+</body>
+</html>
