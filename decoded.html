@@ -52,10 +52,36 @@
         button:hover {
             background-color: #005f87;
         }
+        .salt-row {
+            display: flex;
+            gap: 10px;
+        }
+        .salt-row .input-field {
+            flex: 1;
+        }
+        .salt-button {
+            padding: 12px 16px;
+            background-color: #0077b6;
+            color: #ffffff;
+            font-size: 0.85em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .salt-button:hover {
+            background-color: #005f87;
+        }
         .nav-link {
             color: #00b4d8;
             text-align: center;
             text-decoration: none;
+        }
+        .salt-info {
+            color: #a0a0b0;
+            font-size: 0.8em;
+            text-align: center;
         }
         .footer {
             text-align: center;
@@ -67,18 +93,71 @@
     <div class="main-container">
         <h1>Decoded XOR String - Blue Team Pro</h1>
         <form name="formx">
-            <input id="encodedInp" class="input-field" name="encodedInp" type="text" placeholder="Digite a string codificada">
+            <input id="encodedInp" class="input-field" name="encodedInp" type="text" placeholder="Digite a string codificada" style="margin-bottom: 10px;">
+            <div class="salt-row" style="margin-bottom: 10px;">
+                <input id="decodeSalt" class="input-field" name="decodeSalt" type="text" value="01 01 01 01" placeholder="Salt (hex bytes, e.g. DE AD BE EF)">
+                <button type="button" class="salt-button" onclick="randomizeDecodeSalt();">Random Salt</button>
+            </div>
+            <p class="salt-info" style="margin-bottom: 15px;">Salt is auto-extracted from encoded string. Override manually if needed.</p>
             <button type="button" onclick="decodeXorString();">Decodificar XOR String</button>
-            <textarea id="decodedAns" class="output-field" name="decodedAns" rows="6" readonly placeholder="Resultado aparecerá aqui"></textarea>
+            <textarea id="decodedAns" class="output-field" name="decodedAns" rows="6" readonly placeholder="Resultado aparecerá aqui" style="margin-top: 15px;"></textarea>
         </form>
-        <a href="index.html" class="nav-link">← Voltar para Codificação</a>
+        <a href="index.html" class="nav-link">&#8592; Voltar para Codificação</a>
         <div class="footer">
-            Desenvolvido por Lyon - Adaptações e melhorias © 2024<br>
+            Desenvolvido por Lyon - Adaptações e melhorias &copy; 2024<br>
             Código original do XorGen.js por D4rC.nEt (http://d4rc.net)
         </div>     
     </div>
 
     <script>
+        function Dec2Hex(d) {
+            var hexChars = "0123456789ABCDEF";
+            var a = d % 16;
+            var b = (d - a) / 16;
+            return "" + hexChars.charAt(b) + hexChars.charAt(a);
+        }
+
+        function randByte() { return Math.floor(Math.random() * 256 % 256); }
+
+        function randomizeDecodeSalt() {
+            var bytes = [];
+            for (var j = 0; j < 4; j++) {
+                bytes.push(Dec2Hex(randByte()));
+            }
+            document.getElementById('decodeSalt').value = bytes.join(" ");
+        }
+
+        function parseSaltFromField() {
+            var saltStr = document.getElementById('decodeSalt').value.trim();
+            if (saltStr === "") { return [1, 1, 1, 1]; }
+            var parts = saltStr.split(/[\s,]+/);
+            var salt = [];
+            for (var j = 0; j < parts.length; j++) {
+                var val = parseInt(parts[j], 16);
+                if (isNaN(val) || val < 0 || val > 255) {
+                    alert("Invalid salt byte: " + parts[j] + ". Use hex values 00-FF.");
+                    return null;
+                }
+                salt.push(val);
+            }
+            if (salt.length === 0) { return [1, 1, 1, 1]; }
+            return salt;
+        }
+
+        function extractSaltFromString(inputText) {
+            // New format: XorStr<0xNN,[DE,AD,BE,EF],len,0xNNNNNNNN>
+            var saltMatch = inputText.match(/XorStr<0x[0-9A-Fa-f]{2},\[([0-9A-Fa-f]{2}(?:,[0-9A-Fa-f]{2})*)\]/);
+            if (saltMatch) {
+                var parts = saltMatch[1].split(",");
+                var salt = [];
+                for (var j = 0; j < parts.length; j++) {
+                    salt.push(parseInt(parts[j], 16));
+                }
+                return salt;
+            }
+            return null; // Old format, no embedded salt
+        }
+
         function decodeXorString() {
             const inputText = document.getElementById('encodedInp').value;
             const outputText = document.getElementById('decodedAns');
@@ -89,7 +168,7 @@
             }
 
             try {
-                // Extraindo a chave de XOR inicial do prefixo `XorStr<0xF1,6,0x7E7E1174>`
+                // Extract initial XOR key
                 const initialXorMatch = inputText.match(/XorStr<0x([0-9A-Fa-f]{2})/);
                 if (!initialXorMatch) {
                     alert('Formato inválido. Certifique-se de usar a sequência codificada correta.');
@@ -97,7 +176,22 @@
                 }
                 let xvalue = parseInt(initialXorMatch[1], 16);
 
-                // Extraindo a sequência de bytes hexadecimais `\x85\x97\x80\x80\x90`
+                // Try to extract salt from the encoded string first
+                var salt = extractSaltFromString(inputText);
+                if (salt) {
+                    // Auto-fill the salt field with extracted salt
+                    var saltHexParts = [];
+                    for (var j = 0; j < salt.length; j++) {
+                        saltHexParts.push(Dec2Hex(salt[j]));
+                    }
+                    document.getElementById('decodeSalt').value = saltHexParts.join(" ");
+                } else {
+                    // No salt in string (old format) - use salt from input field
+                    salt = parseSaltFromField();
+                    if (salt === null) { return; }
+                }
+
+                // Extract hex sequence
                 const hexSequenceMatch = inputText.match(/"((?:\\x[0-9A-Fa-f]{2})+)"/);
                 if (!hexSequenceMatch) {
                     alert('Formato inválido. Certifique-se de que a sequência codificada está correta.');
@@ -107,11 +201,11 @@
 
                 let decodedString = '';
 
-                for (let hex of hexSequence) {
-                    const hexValue = parseInt(hex.slice(2), 16);
+                for (let i = 0; i < hexSequence.length; i++) {
+                    const hexValue = parseInt(hexSequence[i].slice(2), 16);
                     const charCode = hexValue ^ xvalue;
                     decodedString += String.fromCharCode(charCode);
-                    xvalue = (xvalue + 1) % 256;
+                    xvalue = (xvalue + salt[i % salt.length]) % 256;
                 }
 
                 outputText.value = decodedString;

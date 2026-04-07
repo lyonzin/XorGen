@@ -9,6 +9,7 @@
  *   - Criação de uma interface profissional para codificaçãoo.
  *   - Desenvolvimento da página de decodificação (Decoded).
  *   - Ajustes na experiência do usuário e adição de suporte a novos formatos.
+ *   - SALT-based rolling cipher (xshell.py compatible).
  *
  * Este código foi adaptado e melhorado para atender às necessidades de profissionais de defesa em Binarios.
  */
@@ -56,9 +57,47 @@ function Dec2Hex(Decimal)
 
 function randByte() { return Math.floor(Math.random()*256%256); }
 
+function parseSalt(form)
+{
+	var saltStr = form.salt ? form.salt.value.trim() : "";
+	if (saltStr === "") { return [1, 1, 1, 1]; }
+	var parts = saltStr.split(/[\s,]+/);
+	var salt = [];
+	for (var j = 0; j < parts.length; j++) {
+		var val = parseInt(parts[j], 16);
+		if (isNaN(val) || val < 0 || val > 255) {
+			alert("Invalid salt byte: " + parts[j] + ". Use hex values 00-FF.");
+			return null;
+		}
+		salt.push(val);
+	}
+	if (salt.length === 0) { return [1, 1, 1, 1]; }
+	return salt;
+}
+
+function formatSaltForOutput(salt)
+{
+	var parts = [];
+	for (var j = 0; j < salt.length; j++) {
+		parts.push(Dec2Hex(salt[j]));
+	}
+	return "[" + parts.join(",") + "]";
+}
+
+function randomizeSalt(form)
+{
+	var bytes = [];
+	for (var j = 0; j < 4; j++) {
+		bytes.push(Dec2Hex(randByte()));
+	}
+	form.salt.value = bytes.join(" ");
+}
 
 function blub(form) 
 {
+	var salt = parseSalt(form);
+	if (salt === null) { return; }
+
 	s1 = form.inp.value;
 	xvaluestart = randByte();
 	xrefkill =  "0x" + Dec2Hex(randByte()) + Dec2Hex(randByte()) + Dec2Hex(randByte()) + Dec2Hex(randByte());
@@ -94,13 +133,12 @@ function blub(form)
 		    if(chval==0) { form.ans.value = "invalid character: "+ch; return; }
         }
 		chval ^=xvalue;
-		xvalue += 1;
-		xvalue %= 256;
+		xvalue = (xvalue + salt[i % salt.length]) % 256;
 		hexsequence += "\\x"+ Dec2Hex(chval);
 	}
 	hexsequence += '"';
 	
-	s2  = "/*"+s1+"*/XorStr<0x" + Dec2Hex(xvaluestart) + ","  + finallen + ","+xrefkill+'>('
+	s2  = "/*"+s1+"*/XorStr<0x" + Dec2Hex(xvaluestart) + "," + formatSaltForOutput(salt) + ","  + finallen + ","+xrefkill+'>(';
 	s2 += hexsequence + "+" + xrefkill + ").s";
 	
 	form.ans.value = s2;

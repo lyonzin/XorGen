@@ -74,6 +74,35 @@
             background-color: #005f87;
         }
 
+        /* Salt row */
+        .salt-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .salt-row .input-field {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .salt-button {
+            padding: 12px 16px;
+            background-color: #0077b6;
+            color: #ffffff;
+            font-size: 0.85em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+
+        .salt-button:hover {
+            background-color: #005f87;
+        }
+
         /* Link de navegação */
         .nav-link {
             color: #00b4d8;
@@ -105,15 +134,19 @@
         <h1>XOR String Generator - Blue Team Pro</h1>
         <form name="formx">
             <input id="inp" class="input-field" name="inp" type="text" placeholder="Digite a string para converter">
+            <div class="salt-row">
+                <input id="salt" class="input-field" name="salt" type="text" value="01 01 01 01" placeholder="Salt (hex bytes, e.g. DE AD BE EF)">
+                <button type="button" class="salt-button" onclick="randomizeSalt(this.form);">Random Salt</button>
+            </div>
             <button type="button" class="convert-button" onclick="blub(this.form);">Converter para XOR String</button>
             <textarea id="ans" class="output-field" name="ans" rows="6" readonly placeholder="Resultado aparecerá aqui"></textarea>
         </form>
         <a href="decoded.html" class="nav-link">→ Ir para Decodificação</a>
         <div class="usage-message">
-            Exemplo de uso: XorStr&lt;0xBD,8,0xB4B8AAAF&gt;("&#92;xF1&#92;xBD&#92;xDE&#92;xB6&#92;x8A&#92;xAC&#92;xA4"+0xB4B8AAAF).s
+            Exemplo de uso: XorStr&lt;0xBD,[DE,AD,BE,EF],8,0xB4B8AAAF&gt;("&#92;xF1&#92;xBD&#92;xDE&#92;xB6&#92;x8A&#92;xAC&#92;xA4"+0xB4B8AAAF).s
         </div>
         <div class="footer">
-            Desenvolvido por Lyon - Adaptações e melhorias © 2024<br>
+            Desenvolvido por Lyon - Adaptações e melhorias &copy; 2024<br>
             Código original do XorGen.js por D4rC.nEt (http://d4rc.net)
         </div>       
     </div>
